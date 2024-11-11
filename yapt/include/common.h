@@ -8,7 +8,7 @@
 #define DEPRECATED 0b010
 #define ISDEP      0b001
 
-typedef struct YPF_t {
+typedef struct YPF {
 	char name;
 	char version;
 	uint16_t fsize; /* Size of binary tarball */
@@ -16,6 +16,6 @@ typedef struct YPF_t {
 	char depends[16]; /* Dependencies needed */
 	char source; /* URL for source (Webpage or source tarball) */
 	uint8_t flags;
-} YPF_t;
+} YPF;
 
 #endif
