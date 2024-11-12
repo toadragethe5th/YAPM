@@ -70,6 +70,7 @@ uint8_t showYPFcontents(const char path)
 
 	printf("Package Name: %s \n \
 		Package Version: %s \n \
-		Size: %d \n \
+		Size: %d \n \ /* TODO: display filesize in 
+
 
 
