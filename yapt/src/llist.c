@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "llist.h"
 
@@ -7,15 +8,15 @@
 	I am making this explicitly to store dependencies and packages included.
 
 */
-struct node* makenode(char* data)
+node_t* makenode(char* data)
 {
-	struct node* node = (struct node*) malloc(sizeof(struct node)); /* This memory is freed after writing to the YPF file */
+	node_t* node = (node_t*) malloc(sizeof(node_t)); /* This memory is freed after writing to the YPF file */
 	node->data=data;
 	node->next=NULL;
 	return node;
 }
 
-void append(struct node* head, char* data)
+void append(node_t* head, char* data)
 {
 	next = node->next;
 
@@ -26,9 +27,9 @@ void append(struct node* head, char* data)
 	node->next = makenode(data);
 }
 
-void remove(struct node* head)
+void remove(node_t* head)
 {
-	struct node* tmp;
+	node_t* tmp;
 
 	while (head != NULL) {
 		tmp = head;
@@ -44,9 +45,9 @@ void remove(struct node* head)
 	overflow and the people 
 	who wrote pacman.
 */
-void free_list(struct node* head)
+void free_list(node_t* head)
 {
-	struct node* tmp;
+	node_t* tmp;
 
 	while (head != NULL) {
 		tmp = head;
@@ -55,14 +56,18 @@ void free_list(struct node* head)
 	}
 }
 
-void print_list(struct node* head)
+char* print_list(node_t* head)
 {
-	struct node* tmp;
+	node_t* tmp;
+	char temp2[20]; /* I love clean naming conventions */
+	char* listdata;
 
 	while (head != NULL) {
 		tmp = head;
 		head = head->next;
-		printf("%s ");
+		snprintf(temp2, sizeof(temp2), "%s ", tmp->data);
+		strcat(listdata, temp2);
 	}
-}
 
+	return listdata;
+}

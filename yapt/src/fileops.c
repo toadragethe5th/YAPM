@@ -7,6 +7,7 @@
 #include <zlib.h>
 
 #include "common.h"
+#include "llist.h"
 
 /* 
  * What we want to do here is make the ypf file,
@@ -64,13 +65,20 @@ YPF* readYPF(const char path)
 	return &YPF_file;
 }
 
-uint8_t showYPFcontents(const char path)
+void showYPFcontents(const char path)
 {
 	YPF* file = readYPF(path);
 
 	printf("Package Name: %s \n \
 		Package Version: %s \n \
-		Size: %d \n \ /* TODO: display filesize in 
-
+		Size: %d \n \ 		
+		Programs: %s \n \ 		
+		Dependencies: %s \n \ 
+		Flags: %d \n",
+		file->name, file->version,
+		file->fsize, print_list(file->contents_headnode),
+		print_list(file->deps_headnode),
+		file->flags);
+}
 
 
