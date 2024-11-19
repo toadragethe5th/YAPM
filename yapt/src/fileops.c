@@ -65,6 +65,29 @@ YPF* readYPF(const char path)
 	return &YPF_file;
 }
 
+/*
+	NOTE: providing node_t arguments frees them after the function is called.
+*/
+int makeYPF(char name, char version, node_t* contents, node_t* deps, char author, uint8_t flags)
+{
+	YPF* file = (YPF*) malloc(sizeof(YPF));
+	file->name = name;
+	file->version = version;
+	/* TODO: get filesize of binary tarball */
+	file->contents_headnode = contents;
+	file->deps_headnode = deps;
+	file->author = author;
+	file->flags = flags;
+	
+	int op = writeYPF(file);
+	if op {
+		printf("%s written succesfully", fname);
+	} else
+		fprintf(stderr, "\nError: failed to write to %s.", fname);
+	
+}
+
+
 void showYPFcontents(const char path)
 {
 	YPF* file = readYPF(path);
