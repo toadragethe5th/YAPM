@@ -15,6 +15,18 @@
  *
  */
 
+#define CHUNK 16384
+
+int compress(FILE *src, FILE *dest, int level)
+{
+	int ret, flush;
+	unsigned have;
+	z_stream strm;
+	unsigned char in[];
+
+	strm.zalloc = Z_NULL;
+
+
 /* Write YPF package file.
  */
 int writeYPF(YPF* packageData)
@@ -68,7 +80,7 @@ YPF* readYPF(const char path)
 /*
 	NOTE: providing node_t arguments frees them after the function is called.
 */
-int makeYPF(char name, char version, node_t* contents, node_t* deps, char author, uint8_t flags)
+int makeYPF(char name, char version,  node_t* contents, node_t* deps, char author, uint8_t flags)
 {
 	YPF* file = (YPF*) malloc(sizeof(YPF));
 	file->name = name;
@@ -84,7 +96,10 @@ int makeYPF(char name, char version, node_t* contents, node_t* deps, char author
 		printf("%s written succesfully", fname);
 	} else
 		fprintf(stderr, "\nError: failed to write to %s.", fname);
+		exit(1);
 	
+	free_list(contents);
+	free_list(deps);
 }
 
 
