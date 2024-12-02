@@ -17,15 +17,46 @@
 
 #define CHUNK 16384
 
+/* This is from official Zlib docs. */
 int compress(FILE *src, FILE *dest, int level)
 {
 	int ret, flush;
 	unsigned have;
 	z_stream strm;
-	unsigned char in[];
+	unsigned char in[CHUNK];
+	unsigned char out[CHUNK];
 
 	strm.zalloc = Z_NULL;
+	strm.zfree  = Z_NULL;
+	strm.opaque = Z_NULL;
+	ret = deflateInit(&strm, level);
+	if (ret != Z_OK) {
+		return ret;
+	}
 
+	do { /* Compress until end of file! */
+		strm.avail_in = fread(in, 1, CHUNK, src); /* Write to buffer in[] input file one chunk at a time */
+		if (ferror(src)) { /* Error check */
+			(void) deflateEnd(&strm); /* upon error end deflation process */
+			return Z_ERRNO;
+		}
+		flush = feof(src) ? Z_FINISH : Z_NO_FLUSH; /* Checking to see whether we are at EOF yet */
+		strm.next_in = in;
+		do { /* Deflate data chunk inputs */
+			strm.avail_out = CHUNK;
+			strm.next_out = out;
+			ret = deflate(&strm, flush); /* Actually deflate now */
+			assert(ret != Z_STREAM_ERROR);
+
+			have = CHUNK - strm.avail_out;
+			if (fwrite(out, 1, have, dest) != have || ferror(dest)) {
+				(void) deflateEnd(&strm);
+				return Z_ERRNO;
+			}
+
+		} while (strm.avail_out == 0);
+			
+		
 
 /* Write YPF package file.
  */
